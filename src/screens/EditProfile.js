@@ -1,33 +1,35 @@
 // EditProfile.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useMyContextController } from '../context';
+import firestore from '@react-native-firebase/firestore';
 
 const EditProfile = ({ navigation }) => {
-  const [controller, dispatch] = useMyContextController();
+  const [controller] = useMyContextController();
   const { userLogin } = controller;
 
-  // State để lưu giá trị mới của các trường thông tin
-  const [name, setName] = useState(userLogin.name);
-  const [email, setEmail] = useState(userLogin.email);
-  const [phone, setPhone] = useState(userLogin.phone);
-  const [address, setAddress] = useState(userLogin.address);
+  // State to store the edited profile information
+  const [editedProfile, setEditedProfile] = useState({
+    name: userLogin.name,
+    email: userLogin.email,
+    phone: userLogin.phone,
+    address: userLogin.address,
+  });
 
-  const handleSave = () => {
-    // Cập nhật thông tin người dùng trong context
-    dispatch({
-      type: 'UPDATE_USER',
-      payload: {
-        ...userLogin,
-        name,
-        email,
-        phone,
-        address,
-      },
-    });
+  const handleSave = async () => {
+    try {
+      // Update user information in Firestore
+      await firestore().collection('USERS').doc(userLogin.email).update(editedProfile);
 
-    // Chuyển hướng về màn hình thông tin cá nhân
-    navigation.navigate('UserProfile');
+      console.log('Profile information updated successfully in Firestore and context');
+      Alert.alert('Success', 'Thông tin người dùng đã được cập nhật thành công trên hệ thống, vui lòng đăng nhập lại để load dữ liệu sửa đổi.');
+
+      // Navigate back to the user profile screen
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating user information:', error);
+      Alert.alert('Error', 'Có lỗi xảy ra khi cập nhật thông tin người dùng');
+    }
   };
 
   return (
@@ -36,26 +38,26 @@ const EditProfile = ({ navigation }) => {
       <Text>Tên:</Text>
       <TextInput
         style={styles.input}
-        value={name}
-        onChangeText={text => setName(text)}
+        value={editedProfile.name}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, name: text })}
       />
       <Text>Email:</Text>
       <TextInput
         style={styles.input}
-        value={email}
-        onChangeText={text => setEmail(text)}
+        value={editedProfile.email}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, email: text })}
       />
       <Text>Số điện thoại:</Text>
       <TextInput
         style={styles.input}
-        value={phone}
-        onChangeText={text => setPhone(text)}
+        value={editedProfile.phone}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, phone: text })}
       />
       <Text>Địa chỉ:</Text>
       <TextInput
         style={styles.input}
-        value={address}
-        onChangeText={text => setAddress(text)}
+        value={editedProfile.address}
+        onChangeText={(text) => setEditedProfile({ ...editedProfile, address: text })}
       />
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Lưu thông tin</Text>

@@ -1,4 +1,3 @@
-//Admin.js
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
@@ -57,7 +56,6 @@ const ServiceScreen = ({ navigation }) => {
             style={styles.serviceItem}
             onPress={() => navigation.navigate('ServiceDetail', { service: item })}
           >
-            {/* Hiển thị hình ảnh */}
             <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
             <View>
               <Text>{item.name}</Text>
@@ -75,7 +73,7 @@ const ServiceScreen = ({ navigation }) => {
 
 const OrderProcessingScreen = () => (
   <View style={styles.container}>
-    <Text>Order Processing Screen</Text>
+    <Text>Đang trong quá trình phát triển.</Text>
   </View>
 );
 
@@ -168,10 +166,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   serviceImage: {
-    width: '100%', // Điều chỉnh hình ảnh chiếm toàn bộ chiều rộng
-    height: 200, // Điều chỉnh chiều cao
+    width: '100%',
+    height: 200,
     marginBottom: 8,
-    borderRadius: 8, // Bo tròn góc hình ảnh
+    borderRadius: 8,
   },
 });
 

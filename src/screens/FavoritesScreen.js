@@ -1,5 +1,4 @@
 // FavoritesScreen.js
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -15,8 +14,7 @@ const getCurrentUser = () => {
 const FavoritesScreen = () => {
   const navigation = useNavigation();
   const [favoriteServices, setFavoriteServices] = useState([]);
-  const [updateFlag, setUpdateFlag] = useState(false); // Dummy state to force re-render
-  const [services, setServices] = useState([]);
+  const [updateFlag, setUpdateFlag] = useState(false);
   const [selectedServices, setSelectedServices] = useState([]);
 
   useEffect(() => {
@@ -103,52 +101,56 @@ const FavoritesScreen = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       {favoriteServices.length === 0 ? (
         <Text style={styles.emptyCartMessage}>Danh sách Yêu thích của bạn hiện đang trống.</Text>
       ) : (
-      <FlatList
-        data={favoriteServices}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.serviceItem}
-            onPress={() => navigateToServiceDetail(item)}
-          >
-            <View style={styles.serviceInfo}>
-              <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
-              <View style={styles.serviceText}>
-                <Text>{item.name}</Text>
-                <Text>{item.description} VND</Text>
+        <FlatList
+          data={favoriteServices}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.serviceItem}
+              onPress={() => navigateToServiceDetail(item)}
+            >
+              <View style={styles.serviceInfo}>
+                <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
+                <View style={styles.serviceText}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.money} VND</Text>
+                </View>
               </View>
-            </View>
-            <View style={styles.iconsContainer}>
-              <TouchableOpacity
-                style={styles.favoriteIcon}
-                onPress={() => toggleFavorite(item)}
-              >
-                <Ionicons
-                  name={isServiceFavorite(item) ? 'heart' : 'heart-outline'}
-                  size={21}
-                  color="red"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.addToCartButton}
-                onPress={() => addToCart(item)}
-              >
-                <FontAwesome name="shopping-cart" size={20} color="blue" />
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+              <View style={styles.iconsContainer}>
+                <TouchableOpacity
+                  style={styles.favoriteIcon}
+                  onPress={() => toggleFavorite(item)}
+                >
+                  <Ionicons
+                    name={isServiceFavorite(item) ? 'heart' : 'heart-outline'}
+                    size={21}
+                    color="red"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.addToCartButton}
+                  onPress={() => addToCart(item)}
+                >
+                  <FontAwesome name="shopping-cart" size={20} color="blue" />
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   serviceItem: {
     marginBottom: 12,
     padding: 12,

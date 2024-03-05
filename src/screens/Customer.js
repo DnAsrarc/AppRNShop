@@ -138,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
               <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
               <View style={styles.serviceText}>
                 <Text>{item.name}</Text>
-                <Text>{item.description} VND</Text>
+                <Text>{item.money} VND</Text>
               </View>
             </View>
             <View style={styles.iconsContainer}>
@@ -273,7 +273,6 @@ const styles = StyleSheet.create({
   sendContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    
   },
 });
 

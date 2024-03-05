@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useNavigation } from '@react-navigation/native';
+
 
 const CartScreen = ({ route }) => {
   const { selectedServices, setSelectedServices, reloadCart } = route.params;
+  const navigation = useNavigation();
 
   const [serviceQuantities, setServiceQuantities] = useState(
     Object.fromEntries(selectedServices.map((service) => [service.id, 1]))
   );
 
+  const [totalPrice, setTotalPrice] = useState(0);
+
   useEffect(() => {
     setServiceQuantities(Object.fromEntries(selectedServices.map((service) => [service.id, 1])));
+    updateTotalPrice();
   }, [selectedServices]);
 
   const increaseQuantity = (serviceId) => {
@@ -18,13 +24,22 @@ const CartScreen = ({ route }) => {
       ...prevQuantities,
       [serviceId]: prevQuantities[serviceId] + 1,
     }));
+    updateTotalPrice();
   };
 
   const decreaseQuantity = (serviceId) => {
     setServiceQuantities((prevQuantities) => ({
       ...prevQuantities,
-      [serviceId]: Math.max(prevQuantities[serviceId] - 1, 0),
+      [serviceId]: Math.max(prevQuantities[serviceId] - 1, 1),
     }));
+    updateTotalPrice();
+  };
+
+  const updateTotalPrice = () => {
+    const newTotalPrice = selectedServices.reduce((total, service) => {
+      return total + service.money * serviceQuantities[service.id];
+    }, 0);
+    setTotalPrice(newTotalPrice);
   };
 
   const removeService = (serviceId) => {
@@ -35,7 +50,21 @@ const CartScreen = ({ route }) => {
     if (updatedServices.length === 0) {
       // Reload the cart to update the UI
       reloadCart();
+    } else {
+      updateTotalPrice();
     }
+  };
+
+  const handleCheckout = () => {
+    if (selectedServices.length === 0) {
+      // Show an alert if the cart is empty
+      Alert.alert('Thông báo', 'Giỏ hàng của bạn đang trống. Vui lòng thêm sản phẩm để thanh toán.');
+    } else {
+      // Navigate to the checkout screen
+      navigation.navigate('YourCheckoutScreen', { selectedServices, totalPrice });
+;
+    }
+    
   };
 
   return (
@@ -50,8 +79,11 @@ const CartScreen = ({ route }) => {
           renderItem={({ item }) => (
             <View style={styles.cartItem}>
               <View style={styles.serviceInfo}>
-                <Text>{item.name}</Text>
-                <Text>{item.description} VND</Text>
+                <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
+                <View style={styles.serviceText}>
+                  <Text>{item.name}</Text>
+                  <Text>{item.money} VND</Text>
+                </View>
               </View>
               <View style={styles.actions}>
                 <View style={styles.quantityContainer}>
@@ -71,6 +103,12 @@ const CartScreen = ({ route }) => {
           )}
         />
       )}
+      <View style={styles.totalContainer}>
+        <Text style={styles.totalText}>Tổng tiền: {totalPrice}.000 VND</Text>
+      </View>
+      <TouchableOpacity style={styles.checkoutButton} onPress={handleCheckout}>
+        <Text style={styles.checkoutButtonText}>Thanh toán</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -100,6 +138,17 @@ const styles = StyleSheet.create({
   },
   serviceInfo: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  serviceImage: {
+    width: 80,
+    height: 100,
+    marginRight: 8,
+    borderRadius: 8,
+  },
+  serviceText: {
+    flex: 1,
   },
   actions: {
     flexDirection: 'row',
@@ -112,6 +161,26 @@ const styles = StyleSheet.create({
   },
   quantityText: {
     marginHorizontal: 8,
+  },
+  totalContainer: {
+    marginTop: 16,
+    alignItems: 'flex-end',
+  },
+  totalText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  checkoutButton: {
+    backgroundColor: 'blue',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  checkoutButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

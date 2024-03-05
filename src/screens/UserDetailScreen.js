@@ -1,4 +1,3 @@
-// UserDetailScreen.js
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
@@ -7,29 +6,29 @@ const UserDetailScreen = ({ route, navigation }) => {
   const { user } = route.params;
 
   const handleEditUser = () => {
-    // Chuyển đến màn hình chỉnh sửa thông tin người dùng và truyền thông tin của người dùng cần chỉnh sửa
+    // Navigate to the EditUser screen and pass the user information
     navigation.navigate('EditUser', { user });
   };
 
   const handleDeleteUser = async () => {
     try {
-      // Xóa người dùng khỏi Firestore
+      // Delete the user from Firestore
       await firestore().collection('USERS').doc(user.id).delete();
-      console.log('Người dùng đã được xóa thành công khỏi Firestore');
-      // Quay lại màn hình danh sách người dùng sau khi xóa thành công
+      console.log('User successfully deleted from Firestore');
+      // Navigate back to the user list screen after successful deletion
       navigation.goBack();
     } catch (error) {
-      console.error('Lỗi khi xóa người dùng:', error);
+      console.error('Error deleting user:', error);
     }
   };
 
   const confirmDeleteUser = () => {
     Alert.alert(
-      'Xác nhận',
-      'Bạn có chắc muốn xóa người dùng này?',
+      'Confirmation',
+      'Are you sure you want to delete this user?',
       [
-        { text: 'Hủy bỏ', style: 'cancel' },
-        { text: 'Xóa', onPress: handleDeleteUser, style: 'destructive' },
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', onPress: handleDeleteUser, style: 'destructive' },
       ],
       { cancelable: true }
     );
@@ -37,15 +36,15 @@ const UserDetailScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Thông tin về người dùng</Text>
+      <Text style={styles.title}>User Information</Text>
       <View style={styles.userItem}>
-        <Text>Tên: {user.name}</Text>
+        <Text>Name: {user.name}</Text>
         <Text>Email: {user.email}</Text>
-        <Text>Số điện thoại: {user.phone}</Text>
-        <Text>Địa chỉ: {user.address}</Text>
-        <Text>Vai trò: {user.role}</Text>
+        <Text>Phone: {user.phone}</Text>
+        <Text>Address: {user.address}</Text>
+        <Text>Role: {user.role}</Text>
 
-        {/* Thêm nút chỉnh sửa và xóa */}
+        {/* Add edit and delete buttons */}
         <TouchableOpacity style={styles.button} onPress={handleEditUser}>
           <Text style={styles.buttonText}>Chỉnh sửa</Text>
         </TouchableOpacity>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, Text, StyleSheet } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore'
+import firestore from '@react-native-firebase/firestore';
 
 const SignupScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -51,16 +51,17 @@ const SignupScreen = ({ navigation }) => {
     try {
       const userCredential = await auth().createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
-      // Lưu thông tin người dùng vào Firestore hoặc Realtime Database tại đây nếu cần
-      console.log('User created:', user);
-      const USERS = firestore (). collection("USERS")
+
+      // Save user information to Firestore
+      const USERS = firestore().collection('USERS');
       USERS.doc(email).set({
-        address:"",
-        email:email,
-        name:"",
-        phone:"",
-        role: "customer"
-      })
+        address: '',
+        email: email,
+        name: fullName,
+        phone: '',
+        role: 'customer',
+      });
+
       // Show success notification
       Alert.alert('Thành công', 'Tài khoản được tạo thành công!');
     } catch (error) {
@@ -77,6 +78,7 @@ const SignupScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.registrationText}>Đăng Ký</Text>
+
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Họ và tên</Text>
         <TextInput
@@ -87,6 +89,7 @@ const SignupScreen = ({ navigation }) => {
         />
         {!!fullNameError && <Text style={styles.errorMessage}>{fullNameError}</Text>}
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Email</Text>
         <TextInput
@@ -97,6 +100,7 @@ const SignupScreen = ({ navigation }) => {
         />
         {!!emailError && <Text style={styles.errorMessage}>{emailError}</Text>}
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Mật khẩu</Text>
         <TextInput
@@ -108,6 +112,7 @@ const SignupScreen = ({ navigation }) => {
         />
         {!!passwordError && <Text style={styles.errorMessage}>{passwordError}</Text>}
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Xác nhận mật khẩu</Text>
         <TextInput
@@ -119,10 +124,10 @@ const SignupScreen = ({ navigation }) => {
         />
         {!!confirmPasswordError && <Text style={styles.errorMessage}>{confirmPasswordError}</Text>}
       </View>
+
       <View style={styles.buttonContainer}>
-        <Button title="Quay lại" onPress={handleGoBack} />
-        
-        <Button title="Đăng Ký" onPress={handleSignUp} />
+        <Button title="Quay lại" onPress={handleGoBack} color="#555" />
+        <Button title="Đăng Ký" onPress={handleSignUp} color="#007BFF" />
       </View>
     </View>
   );
@@ -133,7 +138,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    paddingLeft: 20, // Optional: Add padding to align with the left edge
+    paddingHorizontal: 20,
+    paddingTop: 30,
   },
   registrationText: {
     fontSize: 40,
@@ -149,22 +155,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     marginBottom: 5,
-    textAlign: 'left', // Align text to the left
+    textAlign: 'left',
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ccc',
     borderWidth: 1,
     padding: 10,
-    width: '90%', // Make the input take the full width
+    width: '100%',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '90%', // Adjust the width as needed
+    width: '100%',
+    marginTop: 20,
   },
   errorMessage: {
     color: 'red',
+    marginTop: 5,
   },
 });
 

@@ -1,4 +1,3 @@
-// UserProfile.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useMyContextController, logout } from '../context';
@@ -21,11 +20,6 @@ const UserProfile = ({ navigation }) => {
     navigation.navigate('Setting');
   };
 
-  const navigateToEditProfile = () => {
-    // Chuyển hướng đến màn hình sửa thông tin cá nhân
-    navigation.navigate('EditProfile');
-  };
-
   const goBack = () => {
     // Sử dụng navigation để quay lại màn hình trước đó
     navigation.goBack();
@@ -34,11 +28,13 @@ const UserProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Thông tin cá nhân</Text>
-      <Text>Tên: {userLogin.name}</Text>
-      <Text>Email: {userLogin.email}</Text>
-      <Text>Số điện thoại: {userLogin.phone}</Text>
-      <Text>Địa chỉ: {userLogin.address}</Text>
-      <Text>Vai trò: {userLogin.role}</Text>
+      <View style={styles.userInfo}>
+        <Text style={styles.userInfoText}>Tên: {userLogin.name}</Text>
+        <Text style={styles.userInfoText}>Email: {userLogin.email}</Text>
+        <Text style={styles.userInfoText}>Số điện thoại: {userLogin.phone}</Text>
+        <Text style={styles.userInfoText}>Địa chỉ: {userLogin.address}</Text>
+        <Text style={styles.userInfoText}>Vai trò: {userLogin.role}</Text>
+      </View>
       <TouchableOpacity style={styles.button} onPress={navigateToSetting}>
         <Text style={styles.buttonText}>Cài đặt</Text>
       </TouchableOpacity>
@@ -59,16 +55,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 16,
   },
+  userInfo: {
+    marginBottom: 16,
+  },
+  userInfoText: {
+    marginBottom: 8,
+  },
   button: {
-    marginTop: 16,
-    padding: 5,
+    padding: 12,
     borderRadius: 8,
+    backgroundColor: 'blue',
     alignItems: 'center',
+    marginTop: 16,
   },
   buttonText: {
-    color: 'black',
+    color: 'white',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 16,
   },
 });
 

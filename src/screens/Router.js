@@ -20,6 +20,9 @@ import CartScreen from './CartScreen';
 import FavoritesScreen from './FavoritesScreen';
 import AdminChatScreen from './AdminChatScreen';
 import SignupScreen from './SignupScreen';
+import YourCheckoutScreen from './YourCheckoutScreen';
+import ForgotPassword from './ForgotPassword';
+import EditProfile from './EditProfile';
 
 const Stack = createStackNavigator();
  export default Router =()=>{
@@ -75,7 +78,11 @@ const Stack = createStackNavigator();
             <Stack.Screen name='CartScreen' component={CartScreen}/>
             <Stack.Screen name='FavoritesScreen' component={FavoritesScreen}/>
             <Stack.Screen name='AdminChatScreen' component={AdminChatScreen}/>
+            <Stack.Screen name='YourCheckoutScreen' component={YourCheckoutScreen}/>
+            <Stack.Screen name='ForgotPassword' component={ForgotPassword}/>
+            <Stack.Screen name='EditProfile' component={EditProfile}/>
             <Stack.Screen name='SignupScreen' component={SignupScreen}/>
+            
         </Stack.Navigator>
     )
  }
